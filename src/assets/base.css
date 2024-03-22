@@ -1,0 +1,59 @@
+/* Tailwind bekötése */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base classes */
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+}
+
+/* Custom classes (more css rules for a custom class name) */
+@layer components {
+  /* Solution 1 (with @apply) */
+  .custom-input {
+    @apply m-4 border border-black rounded bg-green-100 focus:bg-white;
+  }
+
+  /* Solution 2 (wo @apply) */
+  .custom-input-2 {
+    margin: 1rem;
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: lightgreen;
+
+    /* mivel ez egy nesting css, ezért a postcss.config.js-ben
+    a nesting plugin-t fel kell venni */
+    &:focus {
+      background-color: white;
+    }
+  }
+}
+
+/* Custom utilities (only one css rule for a custom class name) */
+@layer utilities {
+  .custom-utility {
+    @apply bg-black;
+  }
+  .custom-background {
+    @apply bg-blue-500;
+  }
+  /* .custom-background-2 {
+     background-color: theme(colors.blue.500);
+    background-color: theme(colors.custom-green);
+  } */
+  .custom-margin {
+    @apply m-12;
+  }
+  .custom-margin-2 {
+    margin: theme(spacing.12);
+  }
+  /* .custom-margin-3 {
+    margin: theme(spacing[2.5]);
+  } */
+}
