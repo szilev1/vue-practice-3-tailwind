@@ -3,13 +3,10 @@ import { TYPE, useToast } from 'vue-toastification'
 // External imports
 import { useItemStore } from '@/stores/items'
 import type { Item } from '@/stores/types'
-// Local imports
-import { toastOptions } from './toast.config'
+import databaseUrl from '@/config/app.settings'
+import { toastOptions } from '@/config/toast.config'
 
 export default function useAddElement() {
-  // Constants
-  //   const databaseUrl = process.env.DATABASE_URL
-
   // Refs
   const isCreating = ref(false)
 
@@ -21,9 +18,7 @@ export default function useAddElement() {
   const handleAddElement = (newElement: Omit<Item, 'id'>) => {
     isCreating.value = true
 
-    //--
-    fetch('https://vue-demo-31-default-rtdb.europe-west1.firebasedatabase.app/elements.json', {
-      // fetch(`${databaseUrl}/elements`, {
+    fetch(`${databaseUrl}/elements.json`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // import { mapWritableState /*, mapActions*/ } from 'pinia'
 import { computed, onMounted, type ComputedRef } from 'vue'
+// External imports
 import useModeStore from '@/stores/mode'
 import AddEditElement from '@/components/AddEditElement.vue'
 import ElementItem from '@/components/ElementItem.vue'

@@ -1,7 +1,5 @@
+import databaseURL from '@/config/app.settings'
 import { useItemStore } from '@/stores/items'
-
-const DATABASE_URL = 'https://vue-demo-31-default-rtdb.europe-west1.firebasedatabase.app'
-// const databaseUrl = process.env.VUE_APP_DATABASE_URL
 
 export default function useGetElementList() {
   const itemStore = useItemStore()
@@ -9,7 +7,7 @@ export default function useGetElementList() {
   function getElementList() {
     itemStore.isLoading = true
 
-    fetch(`${DATABASE_URL}/elements.json`)
+    fetch(`${databaseURL}/elements.json`)
       .then((response) => {
         if (response.ok) {
           return response.json()
@@ -24,9 +22,7 @@ export default function useGetElementList() {
             description: data[id].description
           })
         }
-        //--
-        console.log('Loaded list', elements)
-        //--
+
         itemStore.getItemListSuccess(elements)
       })
       .catch((error) => {

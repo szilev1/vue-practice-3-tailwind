@@ -3,10 +3,8 @@ import { TYPE, useToast } from 'vue-toastification'
 // External imports
 import { useItemStore } from '@/stores/items'
 import type { Item } from '@/stores/types'
-// Local imports
-import { toastOptions } from './toast.config'
-
-const DATABASE_URL = 'https://vue-demo-31-default-rtdb.europe-west1.firebasedatabase.app'
+import databaseURL from '@/config/app.settings'
+import { toastOptions } from '@/config/toast.config'
 
 export default function useEditElement() {
   // Refs
@@ -20,7 +18,7 @@ export default function useEditElement() {
   const handleEditElement = (editedElement: Item) => {
     isEditing.value = true
 
-    fetch(`${DATABASE_URL}/elements/${editedElement.id}.json`, {
+    fetch(`${databaseURL}/elements/${editedElement.id}.json`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
