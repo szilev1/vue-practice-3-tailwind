@@ -1,10 +1,14 @@
 import { ref, type Ref } from 'vue'
-
+import { TYPE, useToast } from 'vue-toastification'
+// External imports
 import { useItemStore } from '@/stores/items'
+// Local imports
+import { toastOptions } from './toast.config'
 
 export default function useRemoveElement() {
   // Hooks
   const itemStore = useItemStore()
+  const toast = useToast()
 
   // Refs
   const isRemoving: Ref<boolean> = ref(false)
@@ -25,8 +29,8 @@ export default function useRemoveElement() {
       .then((response) => {
         isRemoving.value = false
         if (response.ok) {
-          alert('Element succesfully removed')
           itemStore.deleteItemSuccess(elementId)
+          toast.success('Item is successfully removed!', { ...toastOptions, type: TYPE.SUCCESS })
         } else {
           itemStore.error = 'Api error'
         }
@@ -35,7 +39,7 @@ export default function useRemoveElement() {
         console.log(error)
         itemStore.crudFailure(error?.message || 'Client error')
         isRemoving.value = false
-        // errorRemove.value = error.message
+        toast.error('Failed to remove item!', { ...toastOptions, type: TYPE.ERROR })
       })
   }
 

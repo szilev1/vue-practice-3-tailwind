@@ -1,5 +1,10 @@
 import { ref } from 'vue'
+import { TYPE, useToast } from 'vue-toastification'
+// External imports
 import { useItemStore } from '@/stores/items'
+import type { Item } from '@/stores/types'
+// Local imports
+import { toastOptions } from './toast.config'
 
 export default function useAddElement() {
   // Constants
@@ -10,9 +15,10 @@ export default function useAddElement() {
 
   // Hooks
   const itemStore = useItemStore()
+  const toast = useToast()
 
   // Methods
-  const handleAddElement = (newElement) => {
+  const handleAddElement = (newElement: Omit<Item, 'id'>) => {
     isCreating.value = true
 
     //--
@@ -36,20 +42,19 @@ export default function useAddElement() {
       })
       .then((data) => {
         isCreating.value = false
-        alert('Element successfully created')
-        console.log('Firebase response:', data)
-        //--
-        const createdElement = {
+        const createdElement: Item = {
           id: data.name,
           name: newElement.name,
           description: newElement.description
         }
         itemStore.createItemSuccess(createdElement)
+        toast.success('Item is successfully created!', { ...toastOptions, type: TYPE.SUCCESS })
       })
       .catch((error) => {
         console.log(error)
         itemStore.crudFailure(error?.message || 'Client error')
         isCreating.value = false
+        toast.error('Failed to create item!', { ...toastOptions, type: TYPE.ERROR })
       })
   }
 

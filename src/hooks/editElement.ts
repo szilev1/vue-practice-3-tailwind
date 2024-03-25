@@ -1,6 +1,10 @@
 import { ref, type Ref } from 'vue'
+import { TYPE, useToast } from 'vue-toastification'
+// External imports
 import { useItemStore } from '@/stores/items'
 import type { Item } from '@/stores/types'
+// Local imports
+import { toastOptions } from './toast.config'
 
 const DATABASE_URL = 'https://vue-demo-31-default-rtdb.europe-west1.firebasedatabase.app'
 
@@ -10,14 +14,12 @@ export default function useEditElement() {
 
   // Hooks
   const itemStore = useItemStore()
+  const toast = useToast()
 
   // Methods
   const handleEditElement = (editedElement: Item) => {
     isEditing.value = true
-    //--
-    console.log('editedElement in hook', editedElement)
 
-    //--
     fetch(`${DATABASE_URL}/elements/${editedElement.id}.json`, {
       method: 'PATCH',
       headers: {
@@ -28,17 +30,6 @@ export default function useEditElement() {
         description: editedElement.description
       })
     })
-      // .then((response) => {
-      //   isEditing.value = false
-      //   if (response.ok) {
-      //     alert('Element succesfully edited')
-      //     //--
-      //     //emit('get-element-list')
-      //     // getElementList()
-      //   } else {
-      //     throw new Error('Could not save data!')
-      //   }
-      // })
       .then((response) => {
         if (response.ok) {
           return response.json()
@@ -48,21 +39,19 @@ export default function useEditElement() {
       })
       .then((data) => {
         isEditing.value = false
-        alert('Element successfully created')
-        console.log('Firebase response:', data)
-        //--
         const updatedElement = {
           id: editedElement.id,
           name: data.name,
           description: data.description
         }
         itemStore.editItemSuccess(updatedElement)
-        //-- return createdElement
+        toast.success('Item is successfully edited!', { ...toastOptions, type: TYPE.SUCCESS })
       })
       .catch((error) => {
         console.log(error)
         itemStore.crudFailure(error?.message || 'Client error')
         isEditing.value = false
+        toast.error('Failed to edit item!', { ...toastOptions, type: TYPE.ERROR })
       })
   }
 
